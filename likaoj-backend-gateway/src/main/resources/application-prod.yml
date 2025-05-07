@@ -1,0 +1,42 @@
+spring:
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
+    gateway:
+      routes:
+        - id: likaoj-backend-user-service
+          uri: lb://likaoj-backend-user-service
+          predicates:
+            - Path=/api/user/**
+        - id: likaoj-backend-judge-service
+          uri: lb://likaoj-backend-judge-service
+          predicates:
+            - Path=/api/judge/**
+        - id: likaoj-backend-question-service
+          uri: lb://likaoj-backend-question-service
+          predicates:
+            - Path=/api/question/**
+  main:
+    web-application-type: reactive
+  application:
+    name: likaoj-backend-gateway
+server:
+  port: 8101
+
+knife4j:
+  gateway:
+    # 是否开启
+    enabled: true
+    # 排序规则(tag/operation排序自4.2.0版本新增)
+    # 取值：alpha-默认排序规则，官方swagger-ui默认实现,order-Knife4j提供的增强排序规则，开发者可扩展x-order，根据数值来自定义排序
+    tags-sorter: order
+    operations-sorter: order
+    # 指定服务发现的模式聚合微服务文档，并且是默认`default`分组
+    strategy: discover
+    discover:
+      # 开启
+      enabled: true
+        # 指定版本号(swagger2|openapi3)
+      version: swagger2
+
